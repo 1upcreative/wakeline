@@ -32,7 +32,13 @@ Wakeline renders every frame live, so each race plays out differently.
 - **One race per display.** Three screens get three separate races.
 - **No dependencies.** Swift, Metal and nothing else.
 
-## Install
+## Download
+
+**[Download Wakeline 1.0](https://github.com/1upcreative/wakeline/releases/latest/download/Wakeline.zip)**
+
+Unzip it and double-click `Wakeline.saver`. Apple has notarized this build. You need an Apple Silicon Mac on macOS 14 or later.
+
+## Build it yourself
 
 You need an Apple Silicon Mac on macOS 14 or later, plus Apple's Command Line Tools. You don't need Xcode. We test on macOS 26.5, so older versions may need a tweak.
 
