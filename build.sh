@@ -2,6 +2,7 @@
 # Builds Wakeline Preview.app and Wakeline.saver with Command Line Tools only.
 set -euo pipefail
 cd "$(dirname "$0")"
+[ "$(uname -m)" = arm64 ] || { echo "Wakeline needs an Apple Silicon Mac."; exit 1; }
 SDK=$(xcrun --show-sdk-path)
 TARGET=arm64-apple-macos14.0
 FLAGS=(-swift-version 5 -O -wmo -sdk "$SDK" -target "$TARGET")

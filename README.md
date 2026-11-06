@@ -9,7 +9,7 @@
 
 Two bikes race around your screen and wrap it in glowing walls, lap inside lap. At a random moment one bike swerves into the other's trail and blows up. The walls burn away and a new race starts.
 
-Wakeline renders every frame live, so you never see the same race twice.
+Wakeline renders every frame live, so each race plays out differently.
 
 <p align="center"><img src="docs/hero.gif" alt="A blue bike crashes into the green trail and explodes" width="720"></p>
 
@@ -85,6 +85,8 @@ Wakeline collects nothing. It has no network code, no accounts and no tracking. 
 | Shaders | `Resources/Wakeline.metal` |
 | Bike model, built in headless Blender | `tools/build_assets.py` |
 | macOS screensaver wrapper | `Sources/Saver/WakelineSaverView.swift` |
+
+Wakeline compiles its bundled shaders when it starts. It downloads nothing.
 
 To test the race rules without opening a window, run this after a build:
 

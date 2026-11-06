@@ -1,3 +1,4 @@
 build/
 *.mp4
 .DS_Store
+Resources/runner-render.png

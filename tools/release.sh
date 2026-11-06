@@ -13,9 +13,16 @@ SAVER="build/Wakeline.saver"
 ZIP="build/Wakeline.zip"
 codesign --verify --strict --verbose=2 "$SAVER"
 ditto -c -k --keepParent "$SAVER" "$ZIP"
-xcrun notarytool submit "$ZIP" --keychain-profile "$WAKELINE_NOTARY_PROFILE" --wait
+RESULT=$(xcrun notarytool submit "$ZIP" --keychain-profile "$WAKELINE_NOTARY_PROFILE" --wait --output-format json)
+STATUS=$(printf '%s' "$RESULT" | plutil -extract status raw -o - -)
+if [ "$STATUS" != "Accepted" ]; then
+  SUBMISSION=$(printf '%s' "$RESULT" | plutil -extract id raw -o - -)
+  echo "Apple returned: $STATUS"
+  xcrun notarytool log "$SUBMISSION" --keychain-profile "$WAKELINE_NOTARY_PROFILE"
+  exit 1
+fi
 xcrun stapler staple "$SAVER"
 xcrun stapler validate "$SAVER"
 ditto -c -k --keepParent "$SAVER" "$ZIP"
-spctl --assess --type install --verbose=2 "$SAVER"
+syspolicy_check distribution "$SAVER"
 echo "Ready to share: $ZIP"

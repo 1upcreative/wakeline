@@ -18,9 +18,8 @@ final class WakelineSaverView: ScreenSaverView {
     /// isPreview is unreliable on Tahoe and the frame can change after init, so
     /// the System Settings thumbnail is identified by its live size.
     private var isThumbnail: Bool {
-        if bounds.width < 640 { return true }
         if let screen = window?.screen { return bounds.width < screen.frame.width * 0.6 }
-        return false
+        return bounds.width < 640
     }
 
     override init?(frame: NSRect, isPreview: Bool) {
@@ -95,12 +94,19 @@ final class WakelineSaverView: ScreenSaverView {
         }
     }
 
+    /// This notification reaches every copy of the saver, so a thumbnail in
+    /// System Settings keeps running when the full-screen saver ends.
     @objc private func systemStopped() {
+        guard !isThumbnail else { return }
         host?.paused = true
-        let views = WakelineSaverView.views.allObjects
-        guard !views.contains(where: { $0.isThumbnail }), !WakelineSaverView.exitScheduled else { return }
+        guard !WakelineSaverView.thumbnailOpen, !WakelineSaverView.exitScheduled else { return }
         WakelineSaverView.exitScheduled = true
         // The host relaunches on demand; leaving it alive is what burns CPU overnight.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { exit(0) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            WakelineSaverView.exitScheduled = false
+            if !WakelineSaverView.thumbnailOpen { exit(0) }
+        }
     }
+
+    private static var thumbnailOpen: Bool { views.allObjects.contains { $0.isThumbnail } }
 }
